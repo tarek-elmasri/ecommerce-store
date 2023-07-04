@@ -6,22 +6,15 @@ import Summary from "./Summary";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Cart = () => {
   const searchParams = useSearchParams();
   const cart = useCart();
 
-  const removeAll = cart.removeAll;
+  const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => {
-    if (searchParams.get("success")) {
-      toast.success("Payment completed successfully.");
-      removeAll();
-    } else if (searchParams.get("canceled")) {
-      toast.error("Something went wrong!");
-    }
-  }, [searchParams, removeAll]);
+  const removeAll = cart.removeAll;
 
   const onCheckout = async () => {
     try {
@@ -38,6 +31,23 @@ const Cart = () => {
     }
   };
 
+  useEffect(() => {
+    if (searchParams.get("success")) {
+      toast.success("Payment completed successfully.");
+      removeAll();
+    } else if (searchParams.get("canceled")) {
+      toast.error("Something went wrong!");
+    }
+  }, [searchParams, removeAll]);
+
+  // Mounted trick for hydration problems
+  // hydrations happens because of useCart hook which deals with
+  // client local storage
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
   return (
     <>
       <div className="lg:col-span-7">
