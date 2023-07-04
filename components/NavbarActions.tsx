@@ -11,7 +11,9 @@ const NavbarActions: React.FC<NavbarActionsProps> = () => {
   const router = useRouter();
   const cart = useCart();
 
-  // Mounted trick for hydration propblems
+  // Mounted trick for hydration problems
+  // hydrations happens because of useCart hook which deals with
+  // client local storage
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {

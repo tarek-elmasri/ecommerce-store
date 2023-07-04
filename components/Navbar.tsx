@@ -1,11 +1,15 @@
+"use client";
+
 import Container from "@/components/ui/Container";
 import Link from "next/link";
 import MainNav from "@/components/MainNav";
-import getCategories from "@/actions/getCategories";
 import NavbarActions from "./NavbarActions";
+import { Category } from "@/types";
 
-const Navbar = async () => {
-  const categories = await getCategories();
+interface NavbarProps {
+  categories: Category[];
+}
+const Navbar: React.FC<NavbarProps> = async ({ categories }) => {
   return (
     <div className="border-b">
       <Container>

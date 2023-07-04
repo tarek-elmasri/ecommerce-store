@@ -2,45 +2,18 @@
 
 import Button from "@/components/ui/Button";
 import Currency from "@/components/ui/Currency";
-import useCart from "@/hook/useCart";
-import axios from "axios";
-import { toast } from "react-hot-toast";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { Product } from "@/types";
 
-const Summary: React.FC = () => {
-  const searchParams = useSearchParams();
-  const items = useCart((state) => state.items);
-  const removeAll = useCart((state) => state.removeAll);
+interface SummaryProps {
+  items: Product[];
+  onCheckout: () => void;
+}
 
+const Summary: React.FC<SummaryProps> = ({ items, onCheckout }) => {
   const totalPrice = items.reduce(
     (total, item) => total + Number(item.price),
     0
   );
-
-  const onCheckout = async () => {
-    try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
-        {
-          productIds: items.map((item) => item.id),
-        }
-      );
-
-      window.location = res.data.url;
-    } catch (error) {
-      toast.error("Something went wrong!");
-    }
-  };
-
-  useEffect(() => {
-    if (searchParams.get("success")) {
-      toast.success("Payment completed successfully.");
-      removeAll();
-    } else if (searchParams.get("canceled")) {
-      toast.error("Something went wrong!");
-    }
-  }, [searchParams, removeAll]);
 
   return (
     <div

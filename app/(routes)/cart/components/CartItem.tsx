@@ -2,18 +2,15 @@
 
 import Currency from "@/components/ui/Currency";
 import IconButton from "@/components/ui/IconButton";
-import useCart from "@/hook/useCart";
 import { Product } from "@/types";
 import { X } from "lucide-react";
 import Image from "next/image";
 
 interface CartItemProps {
   data: Product;
+  onRemove: () => void;
 }
-const CartItem: React.FC<CartItemProps> = ({ data: item }) => {
-  const cart = useCart();
-
-  const onRemove = () => cart.removeItem(item.id);
+const CartItem: React.FC<CartItemProps> = ({ data: item, onRemove }) => {
 
   return (
     <li className="flex py-6 border-b">
